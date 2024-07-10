@@ -1,4 +1,5 @@
 import { createUser, checkUsernameExists } from '../services/user.service.js';
+import { generateTokenAndSetCookie } from '../utils/generateToken.js';
 
 export const signupUser = async (req, res) => {
 	try {
@@ -17,6 +18,7 @@ export const signupUser = async (req, res) => {
 		const newUser = await createUser({ fullName, username, password, gender });
 
 		if (newUser) {
+			generateTokenAndSetCookie(newUser._id, res);
 			res.status(201).json({
 				_id: newUser._id,
 				fullName: newUser.fullName,
