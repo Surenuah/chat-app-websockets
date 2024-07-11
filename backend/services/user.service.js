@@ -24,3 +24,7 @@ export const createUser = async ({ fullName, username, password, gender }) => {
 export const checkUsernameExists = async username => {
 	return await User.findOne({ username });
 };
+
+export const validatePassword = async (inputPassword, userPassword) => {
+	return await bcrypt.compare(inputPassword, userPassword);
+};
