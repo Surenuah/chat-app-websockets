@@ -2,7 +2,7 @@ import {
 	createUser,
 	checkUsernameExists,
 	validatePassword,
-} from '../services/user.service.js';
+} from '../services/auth.service.js';
 import { generateTokenAndSetCookie } from '../utils/generateToken.js';
 import { asyncErrorHandler } from '../utils/errorHandler.js';
 
