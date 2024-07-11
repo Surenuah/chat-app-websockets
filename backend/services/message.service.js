@@ -28,3 +28,15 @@ export const sendMessage = asyncErrorHandler(
 		return newMessage;
 	}
 );
+
+export const getMessages = asyncErrorHandler(async (senderId, userToChatId) => {
+	const conversation = await Conversation.findOne({
+		participants: { $all: [senderId, userToChatId] },
+	}).populate('messages');
+
+	if (!conversation) {
+		return [];
+	}
+
+	return conversation.messages;
+});
