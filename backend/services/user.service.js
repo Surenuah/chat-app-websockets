@@ -1,30 +1,10 @@
-import bcrypt from 'bcryptjs';
+import { asyncErrorHandler } from '../utils/errorHandler.js';
 import { User } from '../models/user.model.js';
-import { PROFILE_PICTURES } from '../constants/index.js';
 
-export const createUser = async ({ fullName, username, password, gender }) => {
-	const salt = await bcrypt.genSalt(10);
-	const hashedPassword = await bcrypt.hash(password, salt);
+export const getSidebarUsers = asyncErrorHandler(async loggedInUserId => {
+	const allUsers = await User.find({ _id: { $ne: loggedInUserId } }).select(
+		'-password'
+	);
 
-	const boyProfilePicture = `${PROFILE_PICTURES.MALE}${username}`;
-	const girlProfilePicture = `${PROFILE_PICTURES.FEMALE}${username}`;
-
-	const newUser = new User({
-		fullName,
-		username,
-		password: hashedPassword,
-		gender,
-		profilePicture: gender === 'male' ? boyProfilePicture : girlProfilePicture,
-	});
-
-	await newUser.save();
-	return newUser;
-};
-
-export const checkUsernameExists = async username => {
-	return await User.findOne({ username });
-};
-
-export const validatePassword = async (inputPassword, userPassword) => {
-	return await bcrypt.compare(inputPassword, userPassword);
-};
+	return allUsers;
+});
